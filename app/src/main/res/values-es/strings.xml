@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Linear System Solver</string>
+    <string name="cont_des_ib_main">Siguiente</string>
+    <string name="unknowns_hint_main">Incógnitas</string>
+    <string name="empty_unknowns_main">El valor de las incognitas no puede estar vacío</string>
+    <string name="invalid_unknowns_main">El valor de las incógnitas debe estar entre 2 y 20</string>
+    <string name="about_main">Acerca de</string>
+    <string name="unexpected_error_augmented">Hubo un error al tratar de resolver el sistema de ecuaciones lineales</string>
+    <string name="empty_field_augmented">Hay uno o mas campos vacíos</string>
+    <string name="zero_matrix_validation_augmented">La matriz cero fue capturada</string>
+    <string name="solve_des_augmented">Resolver</string>
+    <string name="zero_matrix_results">Esta app no puede resolver este sistema de ecuaciones lineales, uno de los elementos de la diagonal y todos los números abajo de él son cero</string>
+    <string name="homogeneous_matrix_results">Las solución es trivial o no trivial</string>
+    <string name="missing_argument_results">¡Algo no se ejecuto correctamente, falta un argumento!</string>
+    <string name="copy_results">Copiar el resultado</string>
+    <string name="copied_results">Resultado copiado al portapapeles</string>
+    <string name="not_copied_results">No fue posible copiar los resultados al portapapeles</string>
+    <string name="about">Esta app usa el algoritmo Gauss-Jordan para resolver sistemas de ecuaciones lineales (n x n).
+    La limitación de 20 incógnitas es para evitar problemas de rendimiento en el dispositivo, pero el algoritmo no tiene ninguna limitante.</string>
+    <string name="contact_about">Contacto</string>
+    <string name="source_code_about">Código fuente</string>
+    <string name="no_intent_available">No se puede ejecutar esta acción</string>
+</resources>

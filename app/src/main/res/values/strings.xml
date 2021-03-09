@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Linear System Solver</string>
+    <string name="cont_des_ib_main">Next</string>
+    <string name="unknowns_hint_main">Unknowns</string>
+    <string name="empty_unknowns_main">Unknowns must not be empty</string>
+    <string name="invalid_unknowns_main">Unknowns must be between 2 and 20</string>
+    <string name="about_main">About</string>
+    <string name="unexpected_error_augmented">There was an error trying to solve the linear equation system</string>
+    <string name="empty_field_augmented">There is one or more empty fields</string>
+    <string name="zero_matrix_validation_augmented">Zero matrix was entered</string>
+    <string name="solve_des_augmented">Solve</string>
+    <string name="zero_matrix_results">This app cannot solve this system of linear equations, one of the element in the diagonal and all numbers below it are zero</string>
+    <string name="homogeneous_matrix_results">The system of linear equations has a trivial or non-trivial solution</string>
+    <string name="missing_argument_results">Something went wrong, missing argument!</string>
+    <string name="copy_results">Copy result(s)</string>
+    <string name="copied_results">Result(s) copied to clipboard</string>
+    <string name="not_copied_results">It was not possible to copy results to clipboard</string>
+    <string name="about">This app uses the Gauss-Jordan algorithm to solve system of linear equations (n x n).
+    The limitation of 20 unknowns it is to avoid performance issues on the device but the algorithm does not have any limit.</string>
+    <string name="contact_about">Contact</string>
+    <string name="source_code_about">Source code</string>
+    <string name="no_intent_available">Cannot execute this action</string>
+</resources>
