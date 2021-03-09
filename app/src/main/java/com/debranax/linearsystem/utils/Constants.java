@@ -6,7 +6,7 @@ public interface Constants {
     String FORMAT_RESULTS = "#.#####";
     String CONTACT_EMAIL = "debranax@outlook.com";
     String SUBJECT_EMAIL = "Linear Equation System Solver App";
-    String URL_REPO = "https://github.com/debranax/linear-equation-solver-app";
+    String URL_REPO = "https://github.com/debranax/linear-system-solver-app";
     String SAVE_STATE_AUGMENTED_MATRIX = "saveStateAugmentedMatrix";
     int MIN_UNKNOWNS = 2;
     int MAX_TEXT_LENGTH = 15;
