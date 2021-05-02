@@ -1,15 +1,14 @@
 package com.debranax.linearsystem;
 
-import android.util.*;
-
 import com.debranax.linearsystem.math.*;
+import com.debranax.linearsystem.utils.*;
 
 import org.junit.*;
 
 import java.math.*;
 
 /**
- *Local unit test, which will execute on the development machine (host).
+ * Local unit test, which will execute on the development machine (host).
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
@@ -60,6 +59,134 @@ public class LinearSystemsSolverTest {
         //Math.abs( expected – actual ) <= delta
         Assert.assertArrayEquals(solutionExpected, actualSolution, delta);
 
+    }
+
+    @Test
+    public void isWritingValidNumbers() {
+        String number = " 0.1";
+        boolean result = Utils.isWritingValidNumber(number);
+        Assert.assertTrue(result);
+        number = "-";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertTrue(result);
+        number = ".";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertTrue(result);
+        number = "-.";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertTrue(result);
+        number = "-.1";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertTrue(result);
+        number = "-1.1";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertTrue(result);
+        number = " -1.0";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertTrue(result);
+        number = "1/2";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertTrue(result);
+        number = "-1/3";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertTrue(result);
+        number = "-1 1/3";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertTrue(result);
+        number = "-1 1/";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertTrue(result);
+        number = "-1 1";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertTrue(result);
+        number = "";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertTrue(result);
+        number = "-1/1/3";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertFalse(result);
+        number = "-1 1//";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertFalse(result);
+        number = "-1/1/2";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertFalse(result);
+        number = "-1  1/3";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertFalse(result);
+        number = "1/2 1";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertFalse(result);
+        number = "--1/2";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertFalse(result);
+        number = "-1  ";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertFalse(result);
+        number = "-1 /";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertFalse(result);
+        number = "-.5/";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertFalse(result);
+        number = "..";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertFalse(result);
+        number = "-..0";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertFalse(result);
+        number = "1.0.";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertFalse(result);
+        number = "1/.5";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertFalse(result);
+        number = " -1. 0";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertFalse(result);
+        number = " -1. ";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertTrue(result);
+        number = "1.8-";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertFalse(result);
+        number = "1/8-";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertFalse(result);
+        number = "1.-1";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertFalse(result);
+        number = "/-1.04";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertFalse(result);
+        number = "--1.2";
+        result = Utils.isValidNumber(number);
+        Assert.assertFalse(result);
+        number = "1/0";
+        result = Utils.isWritingValidNumber(number);
+        Assert.assertFalse(result);
+    }
+
+    @Test
+    public void testFractionConvertion() {
+        String fraction = "1/1";
+        BigDecimal compareTo = new BigDecimal("1");
+        BigDecimal result = Utils.getBigDecimalFromFraction(fraction.trim());
+        System.out.println(compareTo.toPlainString());
+        System.out.println(result.toPlainString());
+        Assert.assertEquals(0, result.compareTo(compareTo));
+        fraction = "1 1/2";
+        compareTo = new BigDecimal("1.5");
+        result = Utils.getBigDecimalFromFraction(fraction.trim());
+        System.out.println(compareTo.toPlainString());
+        System.out.println(result.toPlainString());
+        Assert.assertEquals(0, result.compareTo(compareTo));
+        fraction = "1 1/3";
+        compareTo = new BigDecimal("1.3333333333");
+        result = Utils.getBigDecimalFromFraction(fraction.trim());
+        System.out.println(compareTo.toPlainString());
+        System.out.println(result.toPlainString());
+        Assert.assertEquals(0, result.compareTo(compareTo));
     }
 
     private double[] getSolutionAsDouble(BigDecimal[] solution) {
