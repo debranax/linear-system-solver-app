@@ -7,6 +7,7 @@
     <string name="about_main">Acerca de</string>
     <string name="unexpected_error_augmented">Hubo un error al tratar de resolver el sistema de ecuaciones lineales</string>
     <string name="empty_field_augmented">Hay uno o mas campos vacíos</string>
+    <string name="invalid_field_augmented">Hay uno o mas campos inválidos</string>
     <string name="zero_matrix_validation_augmented">La matriz cero fue capturada</string>
     <string name="solve_des_augmented">Resolver</string>
     <string name="zero_matrix_results">Esta app no puede resolver este sistema de ecuaciones lineales, uno de los elementos de la diagonal y todos los números abajo de él son cero</string>

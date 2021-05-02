@@ -9,7 +9,7 @@ public interface Constants {
     String URL_REPO = "https://github.com/debranax/linear-system-solver-app";
     String SAVE_STATE_AUGMENTED_MATRIX = "saveStateAugmentedMatrix";
     int MIN_UNKNOWNS = 2;
-    int MAX_TEXT_LENGTH = 15;
+    int MAX_TEXT_LENGTH = 17;
     int MAX_UNKNOWNS_DEFAULT = 20;
     int SIZE_TEXT_RESULTS = 18;
     int WIDTH_EDIT_TEXT_AUGMENTED = 200;

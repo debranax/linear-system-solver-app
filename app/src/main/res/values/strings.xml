@@ -7,6 +7,7 @@
     <string name="about_main">About</string>
     <string name="unexpected_error_augmented">There was an error trying to solve the linear equation system</string>
     <string name="empty_field_augmented">There is one or more empty fields</string>
+    <string name="invalid_field_augmented">There is one or more invalid fields</string>
     <string name="zero_matrix_validation_augmented">Zero matrix was entered</string>
     <string name="solve_des_augmented">Solve</string>
     <string name="zero_matrix_results">This app cannot solve this system of linear equations, one of the element in the diagonal and all numbers below it are zero</string>

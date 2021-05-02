@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.*;
+import android.text.method.*;
 import android.view.*;
 import android.widget.EditText;
 import android.widget.TableLayout;
@@ -23,11 +24,12 @@ import com.debranax.linearsystem.utils.Utils;
 import java.io.*;
 import java.math.BigDecimal;
 
-public class AugmentedMatrix extends AppCompatActivity {
+public class AugmentedMatrix extends AppCompatActivity implements TextWatcher, View.OnFocusChangeListener {
 
     private TableLayout tableLayout;
     private ActivityAugmentedMatrixBinding binding;
     private int unknowns;
+    private String beforeNumber = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,8 +105,7 @@ public class AugmentedMatrix extends AppCompatActivity {
                                        final String[][] savedMatrix) {
         EditText editText = new EditText(this);
         int columnHint = totalColumns == column ? row + 1 : column + 1;
-        editText.setInputType(InputType.TYPE_CLASS_NUMBER |
-                InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
+        editText.setInputType(InputType.TYPE_CLASS_DATETIME);
         editText.setWidth(Constants.WIDTH_EDIT_TEXT_AUGMENTED);
         editText.setMinWidth(Constants.WIDTH_EDIT_TEXT_AUGMENTED);
         editText.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -116,6 +117,9 @@ public class AugmentedMatrix extends AppCompatActivity {
                 editText.setText(savedMatrix[row][column]);
             }
         }
+        editText.addTextChangedListener(this);
+        editText.setOnFocusChangeListener(this);
+        editText.setKeyListener(DigitsKeyListener.getInstance("0123456789./- "));
         return editText;
     }
 
@@ -123,10 +127,16 @@ public class AugmentedMatrix extends AppCompatActivity {
         BigDecimal[][] matrix = new BigDecimal[unknowns][unknowns + 1];
         LinearSystemInfo linearSystemInfo;
         Intent intent;
-        boolean validation = Utils.fillAugmentedMatrix(matrix, tableLayout);
-        if (!validation) {
+        boolean validation;
+        Utils.ValidationResult validationResult = Utils.fillAugmentedMatrix(matrix, tableLayout);
+        if (validationResult == Utils.ValidationResult.Empty) {
             Toast.makeText(AugmentedMatrix.this,
                     getString(R.string.empty_field_augmented), Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (validationResult == Utils.ValidationResult.InvalidNumber) {
+            Toast.makeText(AugmentedMatrix.this,
+                    getString(R.string.invalid_field_augmented), Toast.LENGTH_LONG).show();
             return;
         }
         validation = Utils.isZeroMatrix(matrix);
@@ -139,5 +149,38 @@ public class AugmentedMatrix extends AppCompatActivity {
         intent = new Intent(AugmentedMatrix.this, Results.class);
         intent.putExtra(Constants.LINEAR_SYSTEM_INFO, linearSystemInfo);
         startActivity(intent);
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        boolean isValidNumber = Utils.isWritingValidNumber(s.toString());
+        if (!isValidNumber) {
+            s.replace(0, s.length(), beforeNumber);
+        }
+        beforeNumber = s.toString();
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        EditText editText = (EditText) v;
+        if (hasFocus) {
+            beforeNumber = editText.getText().toString().trim();
+        } else {
+            String number = editText.getText().toString().trim();
+            if (number.length() >= 2 && number.startsWith(".")) {
+                number = "0" + number;
+            } else if (number.length() >= 2 && number.endsWith(".")) {
+                number = number.substring(0, 1);
+            }
+            editText.setText(number);
+        }
     }
 }
