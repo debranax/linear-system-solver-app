@@ -45,19 +45,11 @@ public class LinearSystemUtils {
     public static String format(BigDecimal bg, String pattern) {
         //When is applied the format to very small numbers could be return -0.0
         String formattedNumber  = new DecimalFormat(pattern).format(bg);
-        Double parseDouble =  Double.parseDouble(new DecimalFormat(pattern).format(bg));
+        double parseDouble =  Double.parseDouble(new DecimalFormat(pattern).format(bg));
         if (Math.abs(parseDouble) == 0){
             return "0";
         }
         return formattedNumber;
-    }
-
-    public static String format2(BigDecimal bg) {
-        DecimalFormat df = new DecimalFormat();
-        df.setMaximumFractionDigits(2);
-        df.setMinimumFractionDigits(0);
-        df.setGroupingUsed(false);
-        return  df.format(bg);
     }
 
     public static int getLastColumnIndex(final BigDecimal[][] matrix) {

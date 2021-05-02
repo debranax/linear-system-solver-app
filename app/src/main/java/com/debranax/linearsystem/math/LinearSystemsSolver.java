@@ -73,7 +73,7 @@ public class LinearSystemsSolver {
             final LinearSystemUtils.StatusCode statusCode, final BigDecimal[][] matrix,
             final Level level) {
         LinearSystemInfo linearSystemInfo = new LinearSystemInfo();
-        LinearSystemsSolver.loggMessage(message, level);
+        LinearSystemsSolver.logMessage(message, level);
         linearSystemInfo.setStatusCode(statusCode.getStatusCodeVal());
         // To see partial row echelon form
         if (matrix != null) {
@@ -208,7 +208,7 @@ public class LinearSystemsSolver {
         int totalRowsIndex = LinearSystemUtils.getTotalRows(matrix) - 1;
         int nextRowIndexStart = rowIndex + 1;
 
-        LinearSystemsSolver.makeZeroAboveBelovowRow(matrix, rowIndex, startIndexColumn, nextRowIndexStart,
+        LinearSystemsSolver.makeZeroAboveBelowRow(matrix, rowIndex, startIndexColumn, nextRowIndexStart,
                 totalRowsIndex, false);
     }
 
@@ -221,7 +221,7 @@ public class LinearSystemsSolver {
      */
     private static void makeZeroAboveRow(BigDecimal[][] matrix, final int rowIndex, final int startIndexColumn) {
         int nextRowIndexStart = 0;
-        LinearSystemsSolver.makeZeroAboveBelovowRow(matrix, rowIndex, startIndexColumn, nextRowIndexStart, rowIndex,
+        LinearSystemsSolver.makeZeroAboveBelowRow(matrix, rowIndex, startIndexColumn, nextRowIndexStart, rowIndex,
                 true);
     }
 
@@ -235,9 +235,9 @@ public class LinearSystemsSolver {
      * @param maxRowIndex       Maximum index row to iterate
      * @param makeZeroAbove     true if comes from makeZeroAboveRow(...) method
      */
-    private static void makeZeroAboveBelovowRow(BigDecimal[][] matrix, final int rowIndex,
-                                                final int startIndexColumn, final int nextRowIndexStart,
-                                                final int maxRowIndex, final boolean makeZeroAbove) {
+    private static void makeZeroAboveBelowRow(BigDecimal[][] matrix, final int rowIndex,
+                                              final int startIndexColumn, final int nextRowIndexStart,
+                                              final int maxRowIndex, final boolean makeZeroAbove) {
         int lastColumnIndex = LinearSystemUtils.getLastColumnIndex(matrix);
         int additionalIndexValue = makeZeroAbove ? 1 : 0;
         BigDecimal pivot;
@@ -253,7 +253,7 @@ public class LinearSystemsSolver {
         }
     }
 
-    private static void loggMessage(final String message, final Level level) {
+    private static void logMessage(final String message, final Level level) {
         LinearSystemsSolver.LOGGER.log(level, message);
     }
 }
