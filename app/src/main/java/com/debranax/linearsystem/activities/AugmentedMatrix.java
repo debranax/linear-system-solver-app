@@ -7,7 +7,6 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.*;
-import android.text.method.*;
 import android.view.*;
 import android.widget.EditText;
 import android.widget.TableLayout;
@@ -18,8 +17,7 @@ import com.debranax.linearsystem.R;
 import com.debranax.linearsystem.databinding.*;
 import com.debranax.linearsystem.math.LinearSystemInfo;
 import com.debranax.linearsystem.math.LinearSystemsSolver;
-import com.debranax.linearsystem.utils.Constants;
-import com.debranax.linearsystem.utils.Utils;
+import com.debranax.linearsystem.utils.*;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -105,7 +103,7 @@ public class AugmentedMatrix extends AppCompatActivity implements TextWatcher, V
                                        final String[][] savedMatrix) {
         EditText editText = new EditText(this);
         int columnHint = totalColumns == column ? row + 1 : column + 1;
-        editText.setInputType(InputType.TYPE_CLASS_DATETIME);
+        editText.setKeyListener(FractionalNumberKeyListener.getInstance());
         editText.setWidth(Constants.WIDTH_EDIT_TEXT_AUGMENTED);
         editText.setMinWidth(Constants.WIDTH_EDIT_TEXT_AUGMENTED);
         editText.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -119,7 +117,6 @@ public class AugmentedMatrix extends AppCompatActivity implements TextWatcher, V
         }
         editText.addTextChangedListener(this);
         editText.setOnFocusChangeListener(this);
-        editText.setKeyListener(DigitsKeyListener.getInstance("0123456789./- "));
         return editText;
     }
 
