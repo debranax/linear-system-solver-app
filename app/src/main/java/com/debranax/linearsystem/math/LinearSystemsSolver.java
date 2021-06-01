@@ -21,33 +21,20 @@ public class LinearSystemsSolver {
         BigDecimal[][] matrix = augmentedMatrix.clone();
         LinearSystemInfo linearSystemInfo;
         int totalRows = LinearSystemUtils.getTotalRows(matrix);
-        int columnIndex = 0;
-        BigDecimal diagonalEntry;
-        boolean ifRowSwapped;
+        int columnIndexError;
 
         try {
             if (LinearSystemsSolver.isHomogeneous(matrix)) {
                 return LinearSystemsSolver.getLinearSystemInfoResponse(LinearSystemUtils.HOMOGENEOUS_MESSAGE,
                         LinearSystemUtils.StatusCode.HOMOGENEOUS, null, Level.INFO);
             }
-            for (int rowIndex = 0; rowIndex < totalRows; rowIndex++) {
-                diagonalEntry = matrix[rowIndex][columnIndex];
-                if (diagonalEntry.doubleValue() == 0) {
-                    ifRowSwapped = LinearSystemsSolver.swapRows(matrix, rowIndex, rowIndex);
-                    if (!ifRowSwapped) {
-                        return LinearSystemsSolver.getLinearSystemInfoResponse(LinearSystemUtils.ZERO_COLUMN_MESSAGE
-                                        + "(column index " + columnIndex + ")",
-                                LinearSystemUtils.StatusCode.ZERO_COLUMN, matrix, Level.INFO);
-                    }
-                }
-                LinearSystemsSolver.makeOneZeroBelowRow(matrix, totalRows, rowIndex, columnIndex);
-                columnIndex++;
+            columnIndexError = LinearSystemsSolver.processEntriesBelowDiagonal(matrix, totalRows);
+            if (columnIndexError >= 0) {
+                return LinearSystemsSolver.getLinearSystemInfoResponse(LinearSystemUtils.ZERO_COLUMN_MESSAGE
+                                + "(column index " + columnIndexError + ")",
+                        LinearSystemUtils.StatusCode.ZERO_COLUMN, matrix, Level.INFO);
             }
-            columnIndex = 1;
-            for (int rowIndex = 0; rowIndex < totalRows - 1; rowIndex++) {
-                LinearSystemsSolver.makeZeroAboveRow(matrix, rowIndex, columnIndex);
-                columnIndex++;
-            }
+            LinearSystemsSolver.processEntriesAboveDiagonal(matrix, totalRows);
             linearSystemInfo = LinearSystemsSolver.processFinalResults(matrix);
         } catch (Exception e) {
             //TODO Implement a custom exception and throw it and use a better logger
@@ -58,6 +45,62 @@ public class LinearSystemsSolver {
         }
 
         return linearSystemInfo;
+    }
+
+    /**
+     * Process all the elements below the diagonal
+     *
+     * @param matrix    Augmented matrix
+     * @param totalRows Total rows of augmented matrix
+     * @return Return -1 if the process finish OK otherwise return the column index where the process cannot continue
+     */
+    private static int processEntriesBelowDiagonal(BigDecimal[][] matrix, int totalRows) {
+        int columnIndexError = -1;
+        int columnIndex = 0;
+        boolean ifRowSwapped;
+        for (int rowIndex = 0; rowIndex < totalRows; rowIndex++) {
+            ifRowSwapped = LinearSystemsSolver.swapRowsIfNeeded(matrix, rowIndex, columnIndex);
+            if (ifRowSwapped) {
+                LinearSystemsSolver.makeOneZeroBelowRow(matrix, totalRows, rowIndex, columnIndex);
+                columnIndex++;
+            } else {
+                columnIndexError = columnIndex;
+                break;
+            }
+        }
+        return columnIndexError;
+    }
+
+    /**
+     * If the element in the diagonal is zero tries to swap the rows
+     *
+     * @param matrix      Augmented matrix
+     * @param rowIndex    Row index of the element in the diagonal
+     * @param columnIndex Column index of the element in the diagonal
+     * @return True if swapped succeed or there was not needed to swap rows
+     */
+    private static boolean swapRowsIfNeeded(BigDecimal[][] matrix, int rowIndex, int columnIndex) {
+        BigDecimal diagonalEntry;
+        boolean ifRowSwapped = true;
+        diagonalEntry = matrix[rowIndex][columnIndex];
+        if (diagonalEntry.doubleValue() == 0) {
+            ifRowSwapped = LinearSystemsSolver.swapRows(matrix, rowIndex, rowIndex);
+        }
+        return ifRowSwapped;
+    }
+
+    /**
+     * Process all the elements above the diagonal
+     *
+     * @param matrix    Augmented matrix
+     * @param totalRows Total rows of augmented matrix
+     */
+    private static void processEntriesAboveDiagonal(BigDecimal[][] matrix, int totalRows) {
+        int columnIndex = 1;
+        for (int rowIndex = 0; rowIndex < totalRows - 1; rowIndex++) {
+            LinearSystemsSolver.makeZeroAboveRow(matrix, rowIndex, columnIndex);
+            columnIndex++;
+        }
     }
 
     /**
