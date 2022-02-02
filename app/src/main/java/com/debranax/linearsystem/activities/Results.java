@@ -7,9 +7,9 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.graphics.text.LineBreaker;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,12 +25,18 @@ import com.debranax.linearsystem.math.LinearSystemUtils;
 import com.debranax.linearsystem.utils.Constants;
 import com.debranax.linearsystem.utils.Utils;
 
+import java.math.BigDecimal;
+
 
 public class Results extends AppCompatActivity {
 
     private TableLayout tableLayout;
     private ActivityResultsBinding binding;
 
+    /**
+     * Actions when activity is created
+     * @param savedInstanceState Saved Instance State Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,23 +49,42 @@ public class Results extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         tableLayout = binding.tableLayoutResults;
         LinearSystemInfo linearSystemInfo = bundle != null ? (LinearSystemInfo) bundle.get(Constants.LINEAR_SYSTEM_INFO) : null;
-        if (linearSystemInfo != null) {
-            if (linearSystemInfo.isSolved()) {
-                processSolvedSystem(linearSystemInfo);
-            } else {
-                processErrorSystem(linearSystemInfo);
-            }
-        } else {
-            Toast.makeText(this, getString(R.string.missing_argument_results), Toast.LENGTH_SHORT).show();
-        }
+        this.processResponse(linearSystemInfo);
     }
 
+    /**
+     * Process the results of the linear system
+     * @param linearSystemInfo
+     */
+    private void  processResponse(final LinearSystemInfo linearSystemInfo){
+        if (linearSystemInfo == null){
+            Toast.makeText(this, getString(R.string.missing_argument_results), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (!linearSystemInfo.isSolved()) {
+            processErrorSystem(linearSystemInfo);
+            return;
+        }
+        processSolvedSystem(linearSystemInfo);
+    }
+
+
+    /**
+     * Inflate the menu
+     * @param menu Menu to inflate
+     * @return true
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.results_menu, menu);
         return true;
     }
 
+    /**
+     *  Action when an option menu is selected
+     * @param item Item selected
+     * @return True if item is selected otherwise default parent value is return
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.copy_results) {
@@ -74,20 +99,17 @@ public class Results extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Copy the solution to the clipboard
+     */
     private void copyResults() {
         StringBuilder stringBuilder = new StringBuilder();
         String message = getString(R.string.copied_results);
         ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         ClipData clip;
         for (int row = 0; row < tableLayout.getChildCount(); row++) {
-            View child = tableLayout.getChildAt(row);
-            if (child instanceof TableRow) {
-                TableRow tableRow = (TableRow) child;
-                for (int column = 0; column < tableRow.getChildCount(); column++) {
-                    TextView textView = (TextView) tableRow.getChildAt(column);
-                    stringBuilder.append(textView.getText().toString());
-                }
-            }
+            String rowResult = this.getResults(row);
+            stringBuilder.append(rowResult);
             stringBuilder.append(System.getProperty("line.separator"));
         }
         clip = ClipData.newPlainText("Solution", stringBuilder.toString());
@@ -99,21 +121,44 @@ public class Results extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Copy the solution to a string of the row pass as parameter
+     * @param row Row whee the result is obtained
+     * @return String with the result
+     */
+    private String getResults (final int row){
+        StringBuilder stringBuilder = new StringBuilder();
+        View child = tableLayout.getChildAt(row);
+        if (child instanceof TableRow) {
+            TableRow tableRow = (TableRow) child;
+            for (int column = 0; column < tableRow.getChildCount(); column++) {
+                TextView textView = (TextView) tableRow.getChildAt(column);
+                stringBuilder.append(textView.getText().toString());
+            }
+        }
+        return  stringBuilder.toString();
+    }
+
+    /**
+     * Actions when the linear system is solved successfully
+     * @param linearSystemInfo Instance of the results of the linear system
+     */
     private void processSolvedSystem(final LinearSystemInfo linearSystemInfo) {
         for (int row = 1; row <= linearSystemInfo.getSolution().length; row++) {
             TableRow tableRow = new TableRow(this);
             TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
             TextView textViewVar = new TextView(this);
             TextView textViewSol = new TextView(this);
-
+            BigDecimal bigDecimalResult;
             tableRow.setLayoutParams(layoutParams);
             tableRow.setBackgroundResource(R.drawable.table_border);
 
             textViewVar.setText(String.format(" X%s ", row));
-            if (LinearSystemUtils.isLong(linearSystemInfo.getSolution()[row - 1])) {
-                textViewSol.setText(String.format("= %s", linearSystemInfo.getSolution()[row - 1].longValue()));
+            bigDecimalResult = linearSystemInfo.getSolution()[row - 1];
+            if (LinearSystemUtils.isLong(bigDecimalResult)) {
+                textViewSol.setText(String.format("= %s", bigDecimalResult.longValue()));
             } else {
-                textViewSol.setText(String.format("= %s", LinearSystemUtils.format(linearSystemInfo.getSolution()[row - 1],
+                textViewSol.setText(String.format("= %s", LinearSystemUtils.format(bigDecimalResult,
                         Constants.FORMAT_RESULTS)));
             }
             setCommonTextAttributes(textViewVar);
@@ -128,11 +173,20 @@ public class Results extends AppCompatActivity {
         }
     }
 
+    /**
+     * Set some common properties of the TextView used to show the results
+     * @param textView TextView where properties are applied
+     */
     private void setCommonTextAttributes(TextView textView) {
         textView.setTextSize(Constants.SIZE_TEXT_RESULTS);
         textView.setMinHeight(Constants.HEIGHT_TEXT_RESULTS);
     }
 
+    /**
+     * If there is an error trying to solve the linear systems,has trivial solution or is not possible
+     * to solve the linear system a message is displayed in the activity
+     * @param linearSystemInfo Instance of the results of the linear system
+     */
     private void processErrorSystem(LinearSystemInfo linearSystemInfo) {
         TableRow tableRow = new TableRow(this);
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
@@ -141,7 +195,7 @@ public class Results extends AppCompatActivity {
         tableRow.setLayoutParams(layoutParams);
         textViewMessage.setTextSize(Constants.SIZE_TEXT_RESULTS);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            textViewMessage.setJustificationMode(Layout.JUSTIFICATION_MODE_INTER_WORD);
+            textViewMessage.setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD);
         }
         if (linearSystemInfo.getStatusCode()
                 == LinearSystemUtils.StatusCode.HOMOGENEOUS.getStatusCodeVal()) {

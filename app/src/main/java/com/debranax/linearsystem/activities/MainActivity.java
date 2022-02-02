@@ -8,7 +8,6 @@ import android.content.*;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.*;
-import android.view.inputmethod.*;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -20,6 +19,10 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private EditText editTextUnknowns;
 
+    /**
+     * Actions when activity is created
+     * @param savedInstanceState Saved Instance State Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,22 +35,32 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
+    /**
+     * Show soft keyboard
+     * @param view When request focus the View (EditText) show the soft keyboard
+     */
     public void showSoftKeyboard(View view) {
-        /*if(view.requestFocus()){
-            InputMethodManager imm =(InputMethodManager)
-                    getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
-        }*/
         if (view.requestFocus()) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
     }
+
+    /**
+     * Inflate the menu
+     * @param menu Menu to inflate
+     * @return true
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
+    /**
+     *  Action when an option menu is selected
+     * @param item Item selected
+     * @return True if item is selected otherwise default parent value is return
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.about) {
@@ -58,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Validate unknowns captured by the user in the editTextUnknowns
+     */
     private void processValidations() {
         String unknownsVal = editTextUnknowns.getText().toString();
         int unknowns;

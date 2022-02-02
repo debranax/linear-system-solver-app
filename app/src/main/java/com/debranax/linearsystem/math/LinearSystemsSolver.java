@@ -60,13 +60,12 @@ public class LinearSystemsSolver {
         boolean ifRowSwapped;
         for (int rowIndex = 0; rowIndex < totalRows; rowIndex++) {
             ifRowSwapped = LinearSystemsSolver.swapRowsIfNeeded(matrix, rowIndex, columnIndex);
-            if (ifRowSwapped) {
-                LinearSystemsSolver.makeOneZeroBelowRow(matrix, totalRows, rowIndex, columnIndex);
-                columnIndex++;
-            } else {
+            if (!ifRowSwapped) {
                 columnIndexError = columnIndex;
                 break;
             }
+            LinearSystemsSolver.makeOneZeroBelowRow(matrix, totalRows, rowIndex, columnIndex);
+            columnIndex++;
         }
         return columnIndexError;
     }
