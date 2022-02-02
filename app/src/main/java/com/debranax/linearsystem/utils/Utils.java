@@ -14,7 +14,7 @@ import com.debranax.linearsystem.math.LinearSystemUtils;
 import java.math.*;
 
 public class Utils {
-    private static final String VALID_NUMBER = "^[+-]?\\d+([.]\\d+|(\\s\\d+)?[/][1-9]\\d*)?";
+    private static final String VALID_NUMBER = "^[+-]?\\d+([.]\\d*|(\\s\\d+)?[/][1-9]\\d*)?";
 
     public enum ValidationResult {Empty, InvalidNumber, OK}
 
