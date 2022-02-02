@@ -30,6 +30,11 @@ public class LinearSystemUtils {
         }
     }
 
+    /**
+     * Return the stack trace of the  Throwable pass as an argument
+     * @param throwable Throwable where the stack trace is extracted
+     * @return Return a string containing the stack trace
+     */
     public static String getStackTrace(final Throwable throwable) {
         final StringWriter sw = new StringWriter();
         final PrintWriter pw = new PrintWriter(sw, true);
@@ -37,11 +42,22 @@ public class LinearSystemUtils {
         return sw.getBuffer().toString();
     }
 
+    /**
+     * Validate if the parameter is Long
+     * @param bigDecimal Parameter to evaluate
+     * @return True if parameter is considered Long
+     */
     public static boolean isLong(BigDecimal bigDecimal) {
         //If double equal to long value that means does not have decimal values but watch out for precision of double
         return bigDecimal.doubleValue() == bigDecimal.longValue();
     }
 
+    /**
+     * Format the BigDecimal with the pattern passed in the method
+     * @param bg BigDecimal to format
+     * @param pattern Pattern to use in the formatting
+     * @return String formatted
+     */
     public static String format(BigDecimal bg, String pattern) {
         //When is applied the format to very small numbers could be return -0.0
         String formattedNumber  = new DecimalFormat(pattern).format(bg);
@@ -52,10 +68,20 @@ public class LinearSystemUtils {
         return formattedNumber;
     }
 
+    /**
+     * Get the last column index of the matrix
+     * @param matrix Array where the last index column is obtained
+     * @return  Last Index
+     */
     public static int getLastColumnIndex(final BigDecimal[][] matrix) {
         return matrix[0].length - 1;
     }
 
+    /**
+     * Get total rows of the matrix
+     * @param matrix Array where the total rows is obtained
+     * @return Total rows
+     */
     public static int getTotalRows(final BigDecimal[][] matrix) {
         return matrix.length;
     }
